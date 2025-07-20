@@ -1,6 +1,9 @@
+import java.util.Random;
+import java.util.Scanner;
+
 class TicTacToe
 {
-    char[][] board;
+    static char[][] board;
 
     public TicTacToe()
     {
@@ -19,7 +22,7 @@ class TicTacToe
         }
     }
 
-    void dispBoard()
+    static void dispBoard()
     {
         System.out.println("-------------");
         for (int i = 0; i < board.length; i++)
@@ -34,16 +37,18 @@ class TicTacToe
         }
     }
 
-    void placeMark(int row, int col, char mark)
+    static void placeMark(int row, int col, char mark)
     {
-        if (row >= 0 && row <= 3 && col >= 0 && col <= 3) {
+        if (row >= 0 && row <= 3 && col >= 0 && col <= 3)
+        {
             board[row][col] = mark;
-        } else {
+        } else
+        {
             System.out.println("Invalid Position");
         }
     }
 
-    boolean checkColWin()
+    static boolean checkColWin()
     {
         for (int j = 0; j <= 2; j++)
         {
@@ -55,7 +60,7 @@ class TicTacToe
         return false;
     }
 
-    boolean checkRowWin()
+    static boolean checkRowWin()
     {
         for (int i = 0; i <= 2; i++)
         {
@@ -67,17 +72,117 @@ class TicTacToe
         return false;
     }
 
-    boolean checkDiagonalWin()
+    static boolean checkDiagonalWin()
     {
-        return board[0][0] != ' ' && board[0][0] == board[1][1] && board[1][1] == board[2][2] || board[0][2] != ' ' && board[0][2] == board[1][1] && board[1][1] == board[2][0];
+        return board[0][0] != ' ' && board[0][0] == board[1][1] && board[1][1] == board[2][2]
+                || board[0][2] != ' ' && board[0][2] == board[1][1] && board[1][1] == board[2][0];
+    }
+
+    static boolean checkDraw()
+    {
+        for (int i = 0; i <= 2; i++) {
+            for (int j = 0; j <= 2; j++) {
+                if (board[i][j] == ' ')
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
 
+abstract class Player
+{
+    String name;
+    char mark;
 
-public class LaunchGame {
-    public static void main(String[] args) {
-        TicTacToe t = new TicTacToe();
-        t.dispBoard();
-        System.out.println(t.checkRowWin());
+    abstract void makeMove();
+
+    boolean isValidMove(int row, int col)
+    {
+        if (row >=0 && row <= 2 && col >= 0 && col <= 2)
+        {
+            return TicTacToe.board[row][col] == ' ';
+        }
+        return false;
+    }
+}
+
+class HumanPlayer extends Player
+{
+    HumanPlayer(String name, char mark) {
+        this.name = name;
+        this.mark = mark;
+    }
+
+    void makeMove()
+    {
+        Scanner sc = new Scanner(System.in);
+        int row, col;
+        do {
+            System.out.print("Enter the row and col: ");
+            row = sc.nextInt();
+            col = sc.nextInt();
+        } while (!isValidMove(row, col));
+        TicTacToe.placeMark(row, col, mark);
+    }
+}
+
+class AIPlayer extends Player
+{
+    AIPlayer(String name, char mark) {
+        this.name = name;
+        this.mark = mark;
+    }
+
+    void makeMove()
+    {
+        int row, col;
+        do {
+            Random r = new Random();
+            row = r.nextInt(3);
+            col = r.nextInt(3);
+        } while (!isValidMove(row, col));
+        TicTacToe.placeMark(row, col, mark);
+    }
+}
+
+public class LaunchGame
+{
+    public static void main(String[] args)
+    {
+        new TicTacToe();
+        HumanPlayer p1 = new HumanPlayer("Bob", 'X');
+        AIPlayer p2 = new AIPlayer("Gemini", 'O');
+
+        Player cp;
+        cp = p1;
+
+        while (true)
+        {
+            System.out.println(cp.name + " turn");
+            cp.makeMove();
+            TicTacToe.dispBoard();
+
+            if (TicTacToe.checkColWin() || TicTacToe.checkRowWin() || TicTacToe.checkDiagonalWin())
+            {
+                System.out.println(cp.name + " has won");
+                break;
+            } else if (TicTacToe.checkDraw())
+            {
+                System.out.println("Game is a draw");
+                break;
+            } else
+            {
+                if (cp == p1)
+                {
+                    cp = p2;
+                } else
+                {
+                    cp = p1;
+                }
+            }
+        }
     }
 }
