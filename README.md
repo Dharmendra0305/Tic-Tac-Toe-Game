@@ -14,9 +14,9 @@ A classic two-player Tic-Tac-Toe game built in Java. This project offers a fun a
 
 🚀 How to Run
 - Clone the repository
-  git clone https://github.com/your-username/tic-tac-toe-java.git
+  <p>git clone https://github.com/your-username/tic-tac-toe-java.git</p>
 - Navigate to the project folder
-  cd tic-tac-toe-java
+  <p>cd tic-tac-toe-java</p>
 - Compile and run the game
-  javac TicTacToe.java
-  java TicTacToe
+  <p>javac TicTacToe.java</p>
+  <p>java TicTacToe</p>
