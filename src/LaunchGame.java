@@ -78,8 +78,10 @@ abstract class Player {
 
     abstract void makeMove();
 
-    boolean isValidMove(int row, int col) {
-        if (row >= 0 && row <= 2 && col >= 0 && col <= 2) {
+    boolean isValidMove(int row, int col)
+    {
+        if (row >= 0 && row <= 2 && col >= 0 && col <= 2)
+        {
             return TicTacToe.board[row][col] == ' ';
         }
         return false;
@@ -92,16 +94,25 @@ class HumanPlayer extends Player {
         this.mark = mark;
     }
 
-    void makeMove() {
+    void makeMove()
+    {
         Scanner sc = new Scanner(System.in);
-        int row, col;
-        do {
+        int row, col, attempts = 2;
+        while (attempts-- > 0)
+        {
             System.out.print("Enter the row and col: ");
             row = sc.nextInt();
             col = sc.nextInt();
-        } while (!isValidMove(row, col));
-        TicTacToe.placeMark(row, col, mark);
-        sc.close();
+            if (isValidMove(row, col))
+            {
+                TicTacToe.placeMark(row, col, mark);
+                return;
+            } else
+            {
+                System.out.printf("You are left with %d %s%n", attempts, attempts == 1 ? "attempt" : "attempts");
+            }
+        }
+        System.out.println("Turn skipped due to invalid attempts.");
     }
 }
 
@@ -113,7 +124,8 @@ class AIPlayer extends Player {
 
     void makeMove() {
         int row, col;
-        do {
+        do
+        {
             Random r = new Random();
             row = r.nextInt(3);
             col = r.nextInt(3);
